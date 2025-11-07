@@ -87,6 +87,17 @@ src/
 │   ├── ExampleComponent.vue      # Example component (Quasar template)
 │   └── models.ts                 # Component model definitions
 │
+├── composables/                  # Vue 3 Composition API composables
+│   ├── useIndexPage.ts           # Main page logic (export, watchers, lifecycle)
+│   ├── useEarthquakeMap.ts       # Map interactions and feature management
+│   ├── useEarthquakeFilters.ts   # Filter state management
+│   ├── useEarthquakeTable.ts     # Table state and drawer management
+│   ├── useEarthquakeDetailsDrawer.ts # Drawer logic and handlers
+│   ├── useEarthquakeChart.ts     # Chart initialization and options
+│   ├── useStatisticsCards.ts     # Statistics calculations
+│   ├── useMapPopup.ts            # Map popup state management
+│   └── useActiveFilterChips.ts   # Active filters computation
+│
 ├── pages/                        # Page-level components
 │   ├── IndexPage.vue             # Main dashboard page
 │   └── ErrorNotFound.vue         # 404 error page
@@ -98,7 +109,7 @@ src/
 │
 ├── types/                        # TypeScript type definitions
 │   ├── earthquake.ts             # Earthquake data types and interfaces
-│   ├── components.ts              # Component prop types
+│   ├── components.ts             # Component prop types
 │   └── map.ts                    # OpenLayers map-related types
 │
 ├── utils/                        # Utility functions and helpers
@@ -110,6 +121,20 @@ src/
 │   ├── export.ts                 # CSV export functionality
 │   ├── chartConfig.ts            # ECharts configuration generator
 │   └── tableColumns.ts           # Table column definitions
+│
+├── styles/                       # Component-specific styles (SCSS)
+│   ├── indexPage.scss            # Dashboard page styles
+│   ├── earthquakeCharts.scss     # Chart component styles
+│   ├── earthquakeMap.scss        # Map component styles
+│   ├── earthquakeTable.scss      # Table component styles
+│   ├── earthquakeFilters.scss    # Filter component styles
+│   ├── earthquakeDetailsDrawer.scss # Drawer component styles
+│   ├── statisticsCards.scss      # Statistics cards styles
+│   ├── mapLegend.scss            # Map legend styles
+│   ├── mapPopup.scss             # Map popup styles
+│   ├── mainLayout.scss           # Layout styles
+│   ├── infoRow.scss              # Info row component styles
+│   └── errorNotFound.scss        # 404 page styles
 │
 ├── layouts/                      # Layout components
 │   └── MainLayout.vue            # Main application layout with header
@@ -150,6 +175,8 @@ src/
 ### Component Organization
 
 - **Separation of Concerns**: Each component has a single responsibility
+- **Composables Pattern**: Business logic extracted to composables for reusability and testability
+- **Style Separation**: Component styles separated into dedicated SCSS files in `styles/` directory
 - **Reusable Components**: InfoRow, StatisticsCards, ActiveFilterChips for code reusability
 - **Utility Functions**: Business logic extracted to utility modules for maintainability
 
@@ -173,6 +200,8 @@ This dashboard fetches earthquake data from the [USGS Earthquake API](https://ea
 ## Development Notes
 
 - Uses Vue 3 Composition API with `<script setup>` syntax
+- **Composables Pattern**: Component logic extracted to reusable composables in `composables/` directory
+- **Style Organization**: Component styles separated into individual SCSS files in `styles/` directory
 - TypeScript for type safety throughout the application
 - Quasar's responsive utilities for mobile-first design
 - Proper error handling and loading states
