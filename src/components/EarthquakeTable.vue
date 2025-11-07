@@ -137,144 +137,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useEarthquakeStore } from 'src/stores/earthquake';
-import type { Earthquake } from 'src/types/earthquake';
 import { formatNumber, formatTime, getNumericValue } from 'src/utils/formatters';
 import { getMagnitudeColor } from 'src/utils/magnitude';
 import { earthquakeTableColumns } from 'src/utils/tableColumns';
 import EarthquakeDetailsDrawer from 'src/components/EarthquakeDetailsDrawer.vue';
+import { useEarthquakeTable } from 'src/composables/useEarthquakeTable';
 
 const emit = defineEmits<{
   (e: 'view-on-map'): void;
 }>();
 
-const store = useEarthquakeStore();
-
-const filteredEarthquakes = computed(() => store.filteredEarthquakes);
-const loading = computed(() => store.loading);
-
-const drawerOpen = ref(false);
-const selectedEarthquake = ref<Earthquake | null>(null);
-
-const openDetails = (earthquake: Earthquake) => {
-  selectedEarthquake.value = earthquake;
-  drawerOpen.value = true;
-};
-
-const viewOnMap = () => {
-  emit('view-on-map');
-};
-
-const pagination = ref({
-  sortBy: '',
-  descending: false,
-  page: 1,
-  rowsPerPage: 25,
-});
+const {
+  filteredEarthquakes,
+  loading,
+  drawerOpen,
+  selectedEarthquake,
+  openDetails,
+  viewOnMap,
+  pagination,
+} = useEarthquakeTable((e) => emit(e));
 </script>
 
-<style scoped>
-.table-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  position: relative;
-  isolation: isolate;
-}
-
-.table-header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.table-content {
-  background: transparent;
-}
-
-/* On mobile, remove the outer card styling */
-@media (max-width: 599px) {
-  .table-container {
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-  .table-header {
-    background: white;
-    border-radius: 12px 12px 0 0;
-    margin-bottom: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  }
-
-  .table-content {
-    padding: 0;
-  }
-}
-
-.earthquake-table :deep(.q-table__top) {
-  padding: 0;
-}
-
-.earthquake-table :deep(.q-table thead tr th) {
-  background-color: #f5f7fa;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-}
-
-.earthquake-table :deep(.q-table tbody tr) {
-  transition: background-color 0.2s ease;
-}
-
-.earthquake-table :deep(.q-table tbody tr:hover) {
-  background-color: #f5f7fa;
-}
-
-.magnitude-badge {
-  font-weight: 600;
-  font-size: 0.85rem;
-  padding: 4px 12px;
-  border-radius: 12px;
-}
-
-.earthquake-table :deep(tbody tr) {
-  cursor: pointer;
-}
-
-/* Mobile Grid Card Styles */
-.earthquake-card {
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.earthquake-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  border-color: rgba(25, 118, 210, 0.3);
-}
-
-.earthquake-card:active {
-  transform: translateY(0);
-}
-
-.magnitude-badge-card {
-  font-weight: 600;
-  font-size: 0.9rem;
-  padding: 6px 14px;
-  border-radius: 8px;
-  min-width: 50px;
-  text-align: center;
-}
-
-.earthquake-table :deep(.q-table__grid-content) {
-  padding: 8px;
-}
-
-.earthquake-table :deep(.q-table__grid-item) {
-  padding: 0;
-}
+<style scoped lang="scss">
+@import 'src/styles/earthquakeTable.scss';
 </style>

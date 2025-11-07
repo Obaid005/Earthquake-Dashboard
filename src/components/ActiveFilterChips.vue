@@ -37,17 +37,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useEarthquakeStore } from 'src/stores/earthquake';
+import { useActiveFilterChips } from 'src/composables/useActiveFilterChips';
 
 const store = useEarthquakeStore();
-
-const hasActiveFilters = computed(() => {
-  return (
-    store.filters.magnitudeMin !== null ||
-    store.filters.magnitudeMax !== null ||
-    (store.filters.locationText && store.filters.locationText.trim() !== '')
-  );
-});
+const { hasActiveFilters } = useActiveFilterChips();
 </script>
 

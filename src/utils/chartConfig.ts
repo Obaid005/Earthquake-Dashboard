@@ -3,6 +3,20 @@ import type { Earthquake } from 'src/types/earthquake';
 import { getMagnitudeColorHex } from './magnitude';
 
 /**
+ * Formats tooltip HTML with extracted styles
+ */
+function formatTooltipHtml(name: string, value: string, color: string): string {
+  const tooltipContainerStyle = 'padding: 8px;';
+  const tooltipTitleStyle = 'font-weight: bold; margin-bottom: 4px;';
+  const tooltipValueStyle = `color: ${color}; font-weight: bold;`;
+
+  return `<div style="${tooltipContainerStyle}">
+    <div style="${tooltipTitleStyle}">${name}</div>
+    <div>Magnitude: <span style="${tooltipValueStyle}">${value}</span></div>
+  </div>`;
+}
+
+/**
  * Creates ECharts configuration for earthquake magnitude timeline
  */
 export function createChartOption(earthquakes: Earthquake[]): EChartsOption {
@@ -61,10 +75,7 @@ export function createChartOption(earthquakes: Earthquake[]): EChartsOption {
         }
         const mag = typeof param.value === 'number' ? param.value : 0;
         const color = getMagnitudeColorHex(mag);
-        return `<div style="padding: 8px;">
-          <div style="font-weight: bold; margin-bottom: 4px;">${param.name}</div>
-          <div>Magnitude: <span style="color: ${color}; font-weight: bold;">${value}</span></div>
-        </div>`;
+        return formatTooltipHtml(param.name, value, color);
       },
     },
     xAxis: {

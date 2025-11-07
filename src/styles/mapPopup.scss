@@ -1,0 +1,17 @@
+.popup-card {
+  min-width: 380px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.popup-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+}
+
+.popup-header .text-h6,
+.popup-header .text-caption {
+  color: white;
+}
+

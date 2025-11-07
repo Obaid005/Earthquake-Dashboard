@@ -1,6 +1,6 @@
 <template>
   <q-page class="dashboard-page">
-    <div class="page-container" style="position: relative">
+    <div class="page-container">
       <!-- Loading Overlay -->
       <q-inner-loading :showing="loading" color="primary">
         <q-spinner-gears size="50px" color="primary" />
@@ -92,235 +92,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
-import { useQuasar } from 'quasar';
-import { useEarthquakeStore } from 'src/stores/earthquake';
-import { REFRESH_INTERVAL } from 'src/utils/constants';
-import { exportEarthquakesToCSV } from 'src/utils/export';
 import EarthquakeFilters from 'src/components/EarthquakeFilters.vue';
 import EarthquakeTable from 'src/components/EarthquakeTable.vue';
 import EarthquakeChart from 'src/components/EarthquakeChart.vue';
 import EarthquakeMap from 'src/components/EarthquakeMap.vue';
 import StatisticsCards from 'src/components/StatisticsCards.vue';
 import ActiveFilterChips from 'src/components/ActiveFilterChips.vue';
+import { useIndexPage } from 'src/composables/useIndexPage';
+import { useEarthquakeStore } from 'src/stores/earthquake';
 
-const $q = useQuasar();
+const {
+  tab,
+  loading,
+  error,
+  filteredCount,
+  exportData,
+  mapComponent,
+  switchToMap,
+  onTabTransition,
+} = useIndexPage();
 const store = useEarthquakeStore();
-const tab = ref('table');
-
-const loading = computed(() => store.loading);
-const error = computed(() => store.error);
-const filteredCount = computed(() => store.filteredEarthquakes.length);
-
-const exportData = () => {
-  if (store.filteredEarthquakes.length === 0) {
-    if ($q && typeof $q.notify === 'function') {
-      $q.notify({
-        type: 'warning',
-        message: 'No data to export',
-        icon: 'warning',
-        position: 'top',
-      });
-    }
-    return;
-  }
-
-  exportEarthquakesToCSV(store.filteredEarthquakes);
-
-  if ($q && typeof $q.notify === 'function') {
-    $q.notify({
-      type: 'positive',
-      message: `Exported ${store.filteredEarthquakes.length} earthquakes`,
-      icon: 'download',
-      position: 'top',
-      timeout: 2000,
-    });
-  }
-};
-
-// Watch for errors and show notifications
-watch(
-  () => store.error,
-  (newError) => {
-    if (newError) {
-      $q.notify({
-        type: 'negative',
-        message: `Error: ${newError}`,
-        icon: 'error',
-        position: 'top',
-        timeout: 5000,
-      });
-    }
-  },
-);
-
-const mapComponent = ref<InstanceType<typeof EarthquakeMap> | null>(null);
-
-const switchToMap = () => {
-  tab.value = 'map';
-};
-
-const onTabTransition = () => {
-  // When switching to map tab, check if there's a pending earthquake to zoom to
-  if (tab.value === 'map' && store.selectedEarthquakeForMap) {
-    // Give the map component time to mount and become visible
-    void nextTick();
-  }
-};
-
-// Watch for tab changes to help trigger zoom
-watch(
-  () => tab.value,
-  () => {
-    // Tab change detected - map component will handle zoom if needed
-  },
-);
-
-let refreshTimer: ReturnType<typeof setInterval> | null = null;
-
-onMounted(() => {
-  // Initial data fetch
-  if (store.earthquakes.length === 0) {
-    void store.fetchEarthquakes();
-  }
-
-  // Set up automatic refresh
-  refreshTimer = setInterval(() => {
-    void store.fetchEarthquakes();
-  }, REFRESH_INTERVAL);
-});
-
-onUnmounted(() => {
-  // Clean up interval on component unmount
-  if (refreshTimer) {
-    clearInterval(refreshTimer);
-    refreshTimer = null;
-  }
-});
 </script>
 
-<style scoped>
-.dashboard-page {
-  background: linear-gradient(to bottom, #f5f7fa 0%, #ffffff 200px);
-  min-height: 100vh;
-  padding-bottom: 32px;
-}
-
-.page-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 50px 24px 32px 24px;
-}
-
-@media (max-width: 768px) {
-  .page-container {
-    padding: 0 16px 24px 16px;
-  }
-
-  .dashboard-page {
-    padding-bottom: 24px;
-  }
-}
-
-.hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-icon-wrapper {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  padding: 12px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.hero-subtitle {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-top: 8px;
-}
-
-.hero-highlight {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-}
-
-.hero-badge {
-  display: inline-block;
-}
-
-.hero-footer {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-
-  .hero-section {
-    padding: 24px !important;
-  }
-}
-
-.custom-tabs {
-  background: white;
-  border-radius: 12px;
-  padding: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.tab-button {
-  border-radius: 8px;
-  margin: 0 4px;
-  transition: all 0.2s ease;
-}
-
-.tab-button:hover {
-  background: rgba(25, 118, 210, 0.08);
-}
-
-.tab-panels {
-  background: transparent;
-  position: relative;
-  isolation: isolate;
-}
-
-.tab-panels :deep(.q-tab-panel) {
-  position: relative;
-}
+<style scoped lang="scss">
+@import 'src/styles/indexPage.scss';
 </style>

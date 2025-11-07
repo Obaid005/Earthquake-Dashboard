@@ -91,85 +91,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useEarthquakeStore } from 'src/stores/earthquake';
-import { calculateStatistics } from 'src/utils/statistics';
+import { useStatisticsCards } from 'src/composables/useStatisticsCards';
 
-const store = useEarthquakeStore();
-
-const totalCount = computed(() => store.earthquakes.length);
-const filteredCount = computed(() => store.filteredEarthquakes.length);
-
-const statistics = computed(() => calculateStatistics(store.filteredEarthquakes));
-const maxMagnitude = computed(() => statistics.value.maxMagnitude);
-const avgMagnitude = computed(() => statistics.value.avgMagnitude);
+const { totalCount, filteredCount, maxMagnitude, avgMagnitude } = useStatisticsCards();
 </script>
 
-<style scoped>
-.stat-card {
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  cursor: pointer;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.stat-card .q-card-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 120px;
-  overflow: hidden;
-}
-
-.stat-card .row.items-center.no-wrap {
-  flex: 1;
-  align-items: flex-start;
-  min-width: 0;
-}
-
-.stat-card .col {
-  min-width: 0;
-  overflow: hidden;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.stat-number {
-  transition: all 0.3s ease;
-  font-variant-numeric: tabular-nums;
-}
-
-.stat-icon-large {
-  opacity: 0.8;
-  transition: all 0.3s ease;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.stat-card:hover .stat-icon-large {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.stat-card-total {
-  border-left: 4px solid #1976d2;
-}
-
-.stat-card-filtered {
-  border-left: 4px solid #ff9800;
-}
-
-.stat-card-max {
-  border-left: 4px solid #f44336;
-}
-
-.stat-card-avg {
-  border-left: 4px solid #2196f3;
-}
+<style scoped lang="scss">
+@import 'src/styles/statisticsCards.scss';
 </style>
 

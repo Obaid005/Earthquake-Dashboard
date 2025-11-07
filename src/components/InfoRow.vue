@@ -27,27 +27,6 @@ withDefaults(defineProps<InfoRowProps>(), {
 });
 </script>
 
-<style scoped>
-.info-row {
-  display: flex;
-  align-items: flex-start;
-}
-
-.info-row-icon {
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
-.info-row-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.info-row-label {
-  margin-bottom: 2px;
-}
-
-.info-row-value {
-  word-break: break-word;
-}
+<style scoped lang="scss">
+@import 'src/styles/infoRow.scss';
 </style>
