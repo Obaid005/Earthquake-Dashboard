@@ -52,11 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { MapPopupProps } from 'src/types/components';
 import { getMagnitudeBadgeColor } from 'src/utils/magnitude';
 import { formatTime } from 'src/utils/formatters';
 import InfoRow from 'src/components/InfoRow.vue';
+import { useMapPopup } from 'src/composables/useMapPopup';
 
 const props = defineProps<MapPopupProps>();
 
@@ -64,27 +64,9 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean];
 }>();
 
-const showPopup = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
+const { showPopup } = useMapPopup(props, emit);
 </script>
 
-<style scoped>
-.popup-card {
-  min-width: 380px;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
-
-.popup-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 20px;
-}
-
-.popup-header .text-h6,
-.popup-header .text-caption {
-  color: white;
-}
+<style scoped lang="scss">
+@import 'src/styles/mapPopup.scss';
 </style>

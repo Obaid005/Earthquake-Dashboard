@@ -33,47 +33,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { use } from 'echarts/core';
-import { CanvasRenderer } from 'echarts/renderers';
-import { LineChart } from 'echarts/charts';
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  GridComponent,
-  DataZoomComponent,
-  ToolboxComponent,
-} from 'echarts/components';
 import VChart from 'vue-echarts';
+import { useEarthquakeChart } from 'src/composables/useEarthquakeChart';
 import { useEarthquakeStore } from 'src/stores/earthquake';
-import { createChartOption } from 'src/utils/chartConfig';
 
-use([
-  CanvasRenderer,
-  LineChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  GridComponent,
-  DataZoomComponent,
-  ToolboxComponent,
-]);
-
+const { chartOption } = useEarthquakeChart();
 const store = useEarthquakeStore();
-
-const chartOption = computed(() => createChartOption(store.filteredEarthquakes));
 </script>
 
-<style scoped>
-.chart-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-.chart {
-  height: 600px;
-  width: 100%;
-  border-radius: 8px;
-}
+<style scoped lang="scss">
+@import 'src/styles/earthquakeCharts.scss';
 </style>

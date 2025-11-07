@@ -20,22 +20,6 @@
 // Layout component for the earthquake dashboard
 </script>
 
-<style scoped>
-.header-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 2px 12px rgba(102, 126, 234, 0.3);
-}
-
-.header-toolbar {
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-/* Mobile padding for header */
-@media (max-width: 599px) {
-  .header-toolbar {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-}
+<style scoped lang="scss">
+@import 'src/styles/mainLayout.scss';
 </style>

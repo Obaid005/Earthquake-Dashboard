@@ -38,21 +38,8 @@ import { MAGNITUDE_LEGEND_COLORS } from 'src/utils/magnitude';
 const colors = MAGNITUDE_LEGEND_COLORS;
 </script>
 
-<style scoped>
-.map-legend {
-  background: #f5f7fa;
-  padding: 12px;
-  border-radius: 8px;
-  margin-top: 12px;
-}
-
-.legend-marker {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
+<style scoped lang="scss">
+@import 'src/styles/mapLegend.scss';
 
 .legend-marker-minor {
   background: v-bind('colors.MINOR');
